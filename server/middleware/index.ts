@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import userService from "../services/userService";
-import { UserInterface } from "../types";
+import { UserInterface } from "../interfaces"
 export const SECRET = 'SeCret';
 
 export const authenticateJwt = (req: Request, res: Response, next: NextFunction) => {

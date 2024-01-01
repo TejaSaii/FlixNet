@@ -21,10 +21,7 @@ const getVideoCount = (query) => __awaiter(void 0, void 0, void 0, function* () 
 });
 const getVideos = (query, skip, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const videos = yield db_1.Video.find(query)
-            .skip(skip)
-            .limit(pageSize)
-            .exec();
+        const videos = yield db_1.Video.find(query).skip(skip).limit(pageSize);
         return videos;
     }
     catch (error) {

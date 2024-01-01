@@ -8,6 +8,6 @@ const router = express.Router();
 router.get('/videos', authenticateJwt, getUserDetail, getVideos);
 
 //route to get all the details of a single movie/show
-router.get('/video', authenticateJwt, getUserDetail, getVideo);
+router.get('/video/:id', authenticateJwt, getUserDetail, getVideo);
 
 export default router;

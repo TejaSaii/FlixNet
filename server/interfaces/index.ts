@@ -21,6 +21,6 @@ export interface VideoInterface{
     description: String;
 }
 
-export type Error = {
+export interface Error {
     message: string;
 }

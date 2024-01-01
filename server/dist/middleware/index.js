@@ -38,12 +38,15 @@ const authenticateJwt = (req, res, next) => {
 };
 exports.authenticateJwt = authenticateJwt;
 const getUserDetail = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
         const user = yield userService_1.default.getUserByUserId(req.headers.userId);
         if (user) {
             req.headers.email = user.email;
-            req.headers.age = (_a = user.age) === null || _a === void 0 ? void 0 : _a.toString();
+            if (!user.age) {
+                res.status(403).json({ message: 'User age not found' });
+            }
+            else
+                req.headers.age = user.age.toString();
             next();
         }
         else

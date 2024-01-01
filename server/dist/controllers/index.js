@@ -44,7 +44,6 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 res.json({
                     message: 'User created successfully',
                     token: token,
-                    _id: newUser._id,
                 });
             }
         }
@@ -55,18 +54,12 @@ const signupUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.signupUser = signupUser;
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const parsedUserInput = userInputProps_1.userInputProps.safeParse(req.body);
-    if (!parsedUserInput.success) {
-        return res.status(411).json({
-            mes: parsedUserInput.error,
-        });
-    }
     //if user is present then success else invalid
-    const { email, password } = parsedUserInput.data;
+    const { email, password } = req.body;
     try {
         const user = yield userService_1.default.getUserByEmailPassword(email, password);
         if (user === null) {
-            res.status(403).json({ message: 'User not found' });
+            res.status(403).json({ message: 'Invalid username or password' });
         }
         else {
             const token = jsonwebtoken_1.default.sign({ id: user._id }, middleware_1.SECRET, { expiresIn: '1h' });
@@ -80,10 +73,11 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.loginUser = loginUser;
 const getVideos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const age = parseInt(req.headers.age);
+    const pageNumber = parseInt(req.query.page) || 1;
     const { keyword, type } = req.query;
     try {
         const query = generateQuery(age, keyword, type);
-        paginate(req, query, res);
+        paginate(pageNumber, query, res);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -91,7 +85,7 @@ const getVideos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getVideos = getVideos;
 const getVideo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const showId = req.query.showId;
+    const showId = req.params.id;
     const age = parseInt(req.headers.age);
     try {
         let query = generateQuery(age);
@@ -101,8 +95,8 @@ const getVideo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 { show_id: showId },
             ]
         };
-        const details = videoService_1.default.getVideoDetails(query);
-        res.json({ details });
+        const details = yield videoService_1.default.getVideoDetails(query);
+        res.json({ result: details[0] });
     }
     catch (error) {
         res.status(404).json({ message: error.message });
@@ -110,28 +104,33 @@ const getVideo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getVideo = getVideo;
 //helper function to paginate the data from query and return response
-const paginate = (req, query, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const pageNumber = parseInt(req.query.page) || 1;
+const paginate = (pageNumber, query, res) => __awaiter(void 0, void 0, void 0, function* () {
     const pageSize = 15;
-    const skip = (pageNumber - 1) * pageSize;
     const totalVideos = yield videoService_1.default.getVideoCount(query);
     if (!totalVideos) {
         res.status(500).json({ message: 'Error fetching video count' });
+        return;
     }
     const totalPages = Math.ceil(totalVideos / pageSize);
+    if (pageNumber > totalPages)
+        pageNumber = totalPages;
+    const skip = (pageNumber - 1) * pageSize;
     const videos = yield videoService_1.default.getVideos(query, skip, pageSize);
-    if (!videos) {
+    if (videos === undefined) {
         res.status(404).json({ message: 'Error fetching data' });
+        return;
     }
-    res.json({
-        result: videos,
-        meta_data: {
-            page: pageNumber,
-            size: pageSize,
-            total_records: totalVideos,
-            total_pages: totalPages,
-        }
-    });
+    else {
+        res.json({
+            result: videos,
+            meta_data: {
+                page: pageNumber,
+                size: pageSize,
+                total_records: totalVideos,
+                total_pages: totalPages,
+            }
+        });
+    }
 });
 //helper function to generate the query based on conditions
 const generateQuery = (age, keyword = "", type = "") => {
@@ -149,7 +148,12 @@ const generateQuery = (age, keyword = "", type = "") => {
         });
     }
     if (type) {
-        conditions.push({ type: type });
+        if (type === 'movie')
+            conditions.push({ type: 'Movie' });
+        if (type === 'tvshow')
+            conditions.push({ type: 'TV Show' });
     }
+    if (conditions.length === 1)
+        return conditions[0];
     return (conditions.length !== 0) ? { $and: conditions } : {};
 };

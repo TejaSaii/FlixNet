@@ -16,12 +16,12 @@ const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* ()
         return user;
     }
     catch (error) {
-        throw new Error('Unable to fetch user by email');
+        throw new Error('Unable to fetch user by email ' + error);
     }
 });
 const getUserByUserId = (_id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield db_1.User.findOne({ _id });
+        const user = yield db_1.User.findById({ _id });
         return user;
     }
     catch (error) {

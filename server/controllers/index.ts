@@ -4,7 +4,6 @@ import { SECRET } from "../middleware";
 import jwt from 'jsonwebtoken';
 import { userInputProps } from '../zod/userInputProps';
 import videoService from '../services/videoService';
-import { Error } from '../types';
 
 const signupUser = async (req: Request, res: Response) => {
   //validate if input is correct
@@ -73,8 +72,8 @@ const getVideos = async (req: Request, res: Response) => {
 };
 
 const getVideo = async (req: Request, res: Response) => {
-  const showId = req.query.showId as string;
-  const age = parseInt(req.headers.age as string);
+  const showId: string = req.params.id;
+  const age: number = parseInt(req.headers.age as string);
   try {
     let query = generateQuery(age);
     query = {

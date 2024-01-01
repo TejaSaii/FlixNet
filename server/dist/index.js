@@ -19,4 +19,4 @@ app.listen(port, () => {
     console.log(`Example app running at ${port}`);
 });
 //connect mongo using mongoose
-mongoose_1.default.connect("mongodb+srv://Tejas7844:Tejas7844@cluster0.p7ngkpk.mongodb.net/flixnet");
+mongoose_1.default.connect("mongodb+srv://Tejas7844:Tejas@cluster0.35jadss.mongodb.net/flixnet");

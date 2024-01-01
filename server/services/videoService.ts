@@ -1,6 +1,8 @@
+import { FilterQuery } from 'mongoose';
 import { Video } from '../db';
+import { VideoInterface } from '../interfaces'
 
-const getVideoCount = async (query: any) => {
+const getVideoCount = async (query: FilterQuery<VideoInterface>) => {
   try {
     let count = await Video.countDocuments(query);
     return count;
@@ -10,7 +12,7 @@ const getVideoCount = async (query: any) => {
   }
 }
 
-const getVideos = async (query: any, skip: number, pageSize: number) => {
+const getVideos = async (query: FilterQuery<VideoInterface>, skip: number, pageSize: number) => {
   try {
     const videos = await Video.find(query).skip(skip).limit(pageSize);
     return videos;
@@ -20,10 +22,9 @@ const getVideos = async (query: any, skip: number, pageSize: number) => {
   }
 }
 
-const getVideoDetails = async (query: any) => {
+const getVideoDetails = async (query: FilterQuery<VideoInterface>) => {
   try {
     const details = await Video.find(query);
-    console.log(details, query);
     return details;
   }
   catch (error) {
