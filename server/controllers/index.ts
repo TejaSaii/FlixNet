@@ -4,6 +4,7 @@ import { SECRET } from "../middleware";
 import jwt from 'jsonwebtoken';
 import { userInputProps } from '../zod/userInputProps';
 import videoService from '../services/videoService';
+import { Error } from '../types';
 
 const signupUser = async (req: Request, res: Response) => {
   //validate if input is correct

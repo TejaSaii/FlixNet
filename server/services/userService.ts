@@ -1,4 +1,4 @@
-import { User } from "../db"
+import { User } from "../db";
 import { UserInterface } from "../types";
 
 const getUserByEmail = async (email: string) => {
