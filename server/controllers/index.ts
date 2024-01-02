@@ -136,7 +136,7 @@ const generateQuery = (age: number, keyword: string = "", type: string = "") => 
   }
   if (type) {
     if(type === 'movie') conditions.push({type: 'Movie'});
-    if(type === 'tvshow') conditions.push({type: 'TV Show'});
+    else if(type === 'tvshow') conditions.push({type: 'TV Show'});
   }
   if (conditions.length === 1) return conditions[0];
   return (conditions.length !== 0) ? { $and: conditions } : {};
