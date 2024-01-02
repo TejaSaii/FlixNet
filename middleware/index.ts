@@ -1,14 +1,18 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import userService from "../services/userService";
 import { UserInterface } from "../interfaces"
-export const SECRET = 'SeCret';
+import jwt from 'jsonwebtoken';
+import userService from "../services/userService";
+import dotenv from 'dotenv';
+
+
+dotenv.config();
+export const SECRET = process.env.SECRET as string;
 
 export const authenticateJwt = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(' ')[1];
-    jwt.verify(token, SECRET, (err, payload) => {
+    jwt.verify(token, SECRET, (err: any, payload) => {
       if (err) {
         return res.sendStatus(403);
       }
