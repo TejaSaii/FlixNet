@@ -5,7 +5,10 @@ import videoRoutes from './routes/video'
 import mongoose from "mongoose";
 const port = 3000;
 import cors from 'cors';
+import dotenv from 'dotenv';
 
+dotenv.config();
+const dbhost = process.env.DB_HOST as string;
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
@@ -17,4 +20,4 @@ app.listen(port, () => {
 })
 
 //connect mongo using mongoose
-mongoose.connect("mongodb+srv://Tejas7844:Tejas@cluster0.35jadss.mongodb.net/flixnet");
+mongoose.connect(dbhost);
