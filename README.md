@@ -8,7 +8,9 @@ It is the backend code for the Angular project [here](https://github.com/TejaSai
 * GET - /app/video/showId - provides all the details of a particular video based on the showId passed.
 
 ## Build Process
-* Add .env file with two variables
-** DB_HOST='YOUR_MONGO_CLUSTER_URI'
-** SECRET='YOUR_SECRET_FOR_JWT'
+* Add .env file with two variables `DB_HOST='YOUR_MONGO_CLUSTER_URI'`  `SECRET='YOUR_SECRET_FOR_JWT'`
+* `npm i` to install all the dependencies
+* `npm run build` to build the project
+* `npm run start` to start the server
+* go to 'localhost:3000' to test the server
 
