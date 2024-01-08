@@ -7,14 +7,14 @@ const getVideoCount = async (query: FilterQuery<VideoInterface>) => {
     let count = await Video.countDocuments(query);
     return count;
   }
-  catch (error) {
-    throw new Error('Unable to fetch video count');
+  catch (error: any) {
+    throw new Error("Unable to fetch video count");
   }
 }
 
 const getVideos = async (query: FilterQuery<VideoInterface>, skip: number, pageSize: number) => {
   try {
-    const videos = await Video.find(query).skip(skip).limit(pageSize);
+    const videos = await Video.find(query).sort({date_added: 1}).skip(skip).limit(pageSize);
     return videos;
   }
   catch (error) {

@@ -14,7 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/app", videoRoutes);
-//add middleware for movies route
 
 app.listen(port, () => {
   console.log(`Example app running at ${port}`)

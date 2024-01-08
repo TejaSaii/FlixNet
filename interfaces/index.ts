@@ -20,7 +20,3 @@ export interface VideoInterface{
     listed_in: String;
     description: String;
 }
-
-export interface Error {
-    message: string;
-}

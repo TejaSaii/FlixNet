@@ -24,7 +24,7 @@ const signupUser = async (req: Request, res: Response) => {
     else {
       const newUser = await userService.saveUser(userData);
       if (newUser === undefined) {
-        res.status(500).json({ message: 'Unablet to create new user' });
+        res.status(500).json({ message: 'Unable to create new user' });
       }
       else {
         const token = jwt.sign({ id: newUser._id }, SECRET, { expiresIn: '1h' });
@@ -64,6 +64,7 @@ const getVideos = async (req: Request, res: Response) => {
   const { keyword, type } = req.query;
   try {
     const query = generateQuery(age, keyword as string, type as string);
+    console.log(JSON.stringify(query))
     paginate(pageNumber, query, res);
   }
   catch (error: any) {
@@ -99,7 +100,7 @@ const paginate = async (pageNumber: number, query: Object, res: Response) => {
     return;
   }
   const totalPages = Math.ceil(totalVideos as number / pageSize);
-  if(pageNumber > totalPages) pageNumber = totalPages;
+  if (pageNumber > totalPages) pageNumber = totalPages;
   const skip = (pageNumber - 1) * pageSize;
   const videos = await videoService.getVideos(query, skip, pageSize);
   if (videos === undefined) {
@@ -123,6 +124,7 @@ const paginate = async (pageNumber: number, query: Object, res: Response) => {
 const generateQuery = (age: number, keyword: string = "", type: string = "") => {
   const conditions: Array<Object> = [];
   const isAbove18 = (age >= 18) ? true : false;
+  
   if (!isAbove18) {
     conditions.push({ rating: { $ne: "R" } });
   }
@@ -135,8 +137,8 @@ const generateQuery = (age: number, keyword: string = "", type: string = "") => 
     });
   }
   if (type) {
-    if(type === 'movie') conditions.push({type: 'Movie'});
-    else if(type === 'tvshow') conditions.push({type: 'TV Show'});
+    if (type === 'movie') conditions.push({ type: 'Movie' });
+    else if (type === 'tvshow') conditions.push({ type: 'TV Show' });
   }
   if (conditions.length === 1) return conditions[0];
   return (conditions.length !== 0) ? { $and: conditions } : {};

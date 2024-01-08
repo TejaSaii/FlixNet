@@ -13,7 +13,7 @@ const videoSchema = new mongoose.Schema({
   director: String,
   cast: String,
   country: String,
-  date_added: String,
+  date_added: Date,
   release_year: Number,
   rating: String,
   duration: String,
